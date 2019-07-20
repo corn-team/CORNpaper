@@ -16,7 +16,7 @@ void DialogSettings::initGui()
     setFixedSize(400, 100);
 
     ui->pushButton_chooseFolder->setIcon(QIcon(":/icons/folder.png"));
-    ui->pushButton_chooseFolder->setIconSize(QSize(20, 20));
+    ui->pushButton_chooseFolder->setIconSize(QSize(18, 18));
 
     ui->pushButton_chooseFolder->installEventFilter(this);
 

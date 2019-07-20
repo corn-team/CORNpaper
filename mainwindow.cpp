@@ -42,7 +42,7 @@ void MainWindow::loadSettings()
     qDebug() << settingsFile;
     wallpapersFolder = settings.value("wallpapersFolder").toString();
     if (wallpapersFolder == "") {
-        settings.setValue("wallpapersFolder", QString(getenv("SYSTEMDRIVE")) + QString(getenv("HOMEPATH")) + "CORNpaper/Wallpapers");
+        settings.setValue("wallpapersFolder", QString(getenv("SYSTEMDRIVE")) + QString(getenv("HOMEPATH")) + "\\CORNpaper\\Wallpapers");
         settings.sync();
         loadSettings();
     }
