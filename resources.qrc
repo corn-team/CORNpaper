@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/roboto-condensed.ttf</file>
+        <file>icons/settings_hover.png</file>
+        <file>icons/folder.png</file>
+        <file>icons/folder_hover.png</file>
+        <file>icons/settings.png</file>
+    </qresource>
+</RCC>
