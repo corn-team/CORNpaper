@@ -10,6 +10,9 @@
 #include <QFontDatabase>
 #include <QDebug>
 #include <QSettings>
+#include <QDir>
+#include <QDirIterator>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -26,13 +29,17 @@ public:
 private:
     void initGui();
 
+    void initWallpapersList();
+
     void loadSettings();
 
     void saveWallpapersFolder();
 
-    void saveWallpaper();
+    void saveWallpaper(QString fileName);
 
     bool eventFilter(QObject *obj, QEvent *e);
+
+    QString transformWallpaperFileName(QString fileName);
 
 private slots:
     void onYourButtonClicked();
@@ -41,12 +48,17 @@ private slots:
 
     void showDialogSettings();
 
+    void chooseWallpapers(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
 
+    QString wpId;
     QString settingsFile;
+    QSettings *settings;
     QString wallpapersFolder;
-    QString wallpaperName;
+    QString wallpaperFileName;
+    QMap<QString, QString> wallpapersList;
 
     DialogSettings *dialogSettings;
 };

@@ -3,6 +3,10 @@
 
 #include <QDialog>
 
+#include <QDir>
+#include <QFileDialog>
+#include <QMessageBox>
+
 namespace Ui {
 class DialogSettings;
 }
@@ -15,15 +19,25 @@ public:
     explicit DialogSettings(QWidget *parent = nullptr, QString wallpapersFolder = "");
     ~DialogSettings();
 
+public:
+    QString wallpapersFolder;
+
 private:
     void initGui();
 
     bool eventFilter(QObject *obj, QEvent* e);
 
+private slots:
+    void wallpaperFolderChanged();
+
+    void onChangeFolderButtonClicked();
+
+    void cancel();
+
+    void apply();
+
 private:
     Ui::DialogSettings *ui;
-
-    QString wallpapersFolder;
 };
 
 #endif // DIALOGSETTINGS_H
