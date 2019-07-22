@@ -28,12 +28,17 @@ SOURCES += \
         dialogsettings.cpp \
         main.cpp \
         mainwindow.cpp \
+        pushbuttonadd.cpp \
+        pushbuttonclose.cpp \
         pushbuttonreload.cpp \
         pushbuttonsettings.cpp
 
 HEADERS += \
         dialogsettings.h \
         mainwindow.h \
+        pushbuttonadd.h \
+        pushbuttonclose.h \
+        pushbuttonclose.h \
         pushbuttonreload.h \
         pushbuttonsettings.h
 

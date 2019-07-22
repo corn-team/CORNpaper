@@ -24,7 +24,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
-       <number>6</number>
+       <number>12</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_tabs">
@@ -96,6 +96,62 @@
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="PushButtonAdd" name="pushButton_add">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButtonClose" name="pushButton_close">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="PushButtonReload" name="pushButton_reload">
@@ -189,6 +245,16 @@
    <class>PushButtonReload</class>
    <extends>QPushButton</extends>
    <header>pushbuttonreload.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PushButtonClose</class>
+   <extends>QPushButton</extends>
+   <header>pushbuttonclose.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PushButtonAdd</class>
+   <extends>QPushButton</extends>
+   <header>pushbuttonadd.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
