@@ -26,8 +26,7 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-        weebp.c
+        mainwindow.cpp
 
 HEADERS += \
         mainwindow.h
