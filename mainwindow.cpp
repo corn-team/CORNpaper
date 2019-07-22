@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    pro = new QProcess(this);
+
     settingsFile = QApplication::applicationDirPath() + "/settings.ini";
     settings = new QSettings(settingsFile, QSettings::IniFormat);
 
@@ -17,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     int id = QFontDatabase::addApplicationFont(":/fonts/roboto-condensed.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont defaultFont(family);
-    setFont(defaultFont);
+    QApplication::setFont(defaultFont);
 
     ui->horizontalLayout_tabs->setAlignment(Qt::AlignLeft);
 
@@ -25,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_your, SIGNAL(clicked()), this, SLOT(onYourButtonClicked()));
     connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(onNewButtonClicked()));
     connect(ui->pushButton_settings, SIGNAL(clicked()), this, SLOT(showDialogSettings()));
-    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(chooseWallpapers(QListWidgetItem*)));
+    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(changeWallpapers(QListWidgetItem*)));
 }
 
 void MainWindow::initGui()
@@ -35,13 +37,16 @@ void MainWindow::initGui()
     ui->pushButton_settings->setIcon(QIcon(":/icons/settings.png"));
     ui->pushButton_settings->setIconSize(QSize(30, 30));
 
-    ui->pushButton_settings->installEventFilter(this);
+    ui->pushButton_reload->setIcon(QIcon(":/icons/reload.png"));
+    ui->pushButton_reload->setIconSize(QSize(28, 28));
 
     initWallpapersList();
 }
 
 void MainWindow::initWallpapersList()
 {
+    ui->listWidget_wallpapers->clear();
+    wallpapersList.clear();
     QDirIterator it(wallpapersFolder, QStringList() << "*.mp4", QDir::Files, QDirIterator::Subdirectories);
     int cnt = 0, row = -1;
     while (it.hasNext()) {
@@ -71,6 +76,10 @@ void MainWindow::loadSettings()
             QDir().mkpath(wallpapersFolder);
         }
     }
+    if (!QFile(wallpaperFileName).exists()) {
+        settings->setValue("wallpapersFileName", "");
+        wallpaperFileName = "";
+    }
 }
 
 void MainWindow::saveWallpapersFolder()
@@ -81,6 +90,7 @@ void MainWindow::saveWallpapersFolder()
 void MainWindow::saveWallpaper(QString fileName)
 {
     settings->setValue("wallpapersFileName", fileName);
+    wallpaperFileName = settings->value("wallpapersFileName").toString();
 }
 
 void MainWindow::onYourButtonClicked() {
@@ -99,17 +109,7 @@ void MainWindow::showDialogSettings()
     dialogSettings->exec();
     wallpapersFolder = dialogSettings->wallpapersFolder;
     saveWallpapersFolder();
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *e)
-{
-    if (obj == ui->pushButton_settings) {
-        if (e->type() == QEvent::HoverEnter) {
-            ui->pushButton_settings->setIcon(QIcon(":/icons/settings_hover.png"));
-        } else if (e->type() == QEvent::HoverLeave) {
-            ui->pushButton_settings->setIcon(QIcon(":/icons/settings.png"));
-        }
-    }
+    initWallpapersList();
 }
 
 QString MainWindow::transformWallpaperFileName(QString fileName)
@@ -122,9 +122,26 @@ QString MainWindow::transformWallpaperFileName(QString fileName)
     return ans.left(ans.lastIndexOf('.'));
 }
 
-void MainWindow::chooseWallpapers(QListWidgetItem *item)
+void MainWindow::changeWallpapers(QListWidgetItem *item)
 {
     saveWallpaper(wallpapersList[item->text()]);
+    QFile file("weebp/CORNpaper.bat");
+    qDebug() << QFileInfo(file).absolutePath();
+    file.open(QIODevice::WriteOnly | QFile::Text);
+    QString batch = "taskkill /F /IM mpv.exe\n"
+                    "(wp id)>>x.txt\n"
+                    "set /p var=<x.txt\n"
+                    "del x.txt\n"
+                    "wp run mpv --wid=%var% " + wallpaperFileName + " --loop=inf "
+                    "--player-operation-mode=pseudo-gui "
+                    "--force-window=yes --no-audio";
+    qDebug() << batch;
+    QTextStream out(&file);
+    out << batch;
+    file.close();
+
+    pro->start("cmd.exe /c cd weebp&CORNpaper.bat");
+    pro->waitForFinished();
 }
 
 MainWindow::~MainWindow()

@@ -5,5 +5,7 @@
         <file>icons/folder.png</file>
         <file>icons/folder_hover.png</file>
         <file>icons/settings.png</file>
+        <file>icons/reload.png</file>
+        <file>icons/reload_hover.png</file>
     </qresource>
 </RCC>

@@ -13,6 +13,7 @@
 #include <QDir>
 #include <QDirIterator>
 #include <QListWidgetItem>
+#include <QProcess>
 
 namespace Ui {
 class MainWindow;
@@ -37,8 +38,6 @@ private:
 
     void saveWallpaper(QString fileName);
 
-    bool eventFilter(QObject *obj, QEvent *e);
-
     QString transformWallpaperFileName(QString fileName);
 
 private slots:
@@ -48,12 +47,14 @@ private slots:
 
     void showDialogSettings();
 
-    void chooseWallpapers(QListWidgetItem *item);
+    void changeWallpapers(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;
 
     QString wpId;
+    QProcess *pro;
+
     QString settingsFile;
     QSettings *settings;
     QString wallpapersFolder;

@@ -19,7 +19,7 @@ DialogSettings::DialogSettings(QWidget *parent, QString wallpapersFolder) :
 
 void DialogSettings::initGui()
 {
-    setFixedSize(400, 100);
+    resize(600, 100);
 
     ui->pushButton_chooseFolder->setIcon(QIcon(":/icons/folder.png"));
     ui->pushButton_chooseFolder->setIconSize(QSize(18, 18));
