@@ -27,11 +27,15 @@ CONFIG += c++11
 SOURCES += \
         dialogsettings.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        pushbuttonreload.cpp \
+        pushbuttonsettings.cpp
 
 HEADERS += \
         dialogsettings.h \
-        mainwindow.h
+        mainwindow.h \
+        pushbuttonreload.h \
+        pushbuttonsettings.h
 
 FORMS += \
         dialogsettings.ui \
