@@ -27,7 +27,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_your, SIGNAL(clicked()), this, SLOT(onYourButtonClicked()));
     connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(onNewButtonClicked()));
     connect(ui->pushButton_settings, SIGNAL(clicked()), this, SLOT(showDialogSettings()));
-    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(changeWallpapers(QListWidgetItem*)));
+    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(changeWallpaper(QListWidgetItem*)));
+    connect(ui->pushButton_reload, SIGNAL(clicked()), this, SLOT(initWallpapersList()));
+    connect(ui->pushButton_close, SIGNAL(clicked()), this, SLOT(closeWallpaper()));
+    connect(ui->pushButton_add, SIGNAL(clicked()), this, SLOT(addWallpaper()));
 }
 
 void MainWindow::initGui()
@@ -40,6 +43,12 @@ void MainWindow::initGui()
     ui->pushButton_reload->setIcon(QIcon(":/icons/reload.png"));
     ui->pushButton_reload->setIconSize(QSize(28, 28));
 
+    ui->pushButton_close->setIcon(QIcon(":/icons/close.png"));
+    ui->pushButton_close->setIconSize(QSize(26, 26));
+
+    ui->pushButton_add->setIcon(QIcon(":/icons/add.png"));
+    ui->pushButton_add->setIconSize(QSize(30, 30));
+
     initWallpapersList();
 }
 
@@ -47,7 +56,8 @@ void MainWindow::initWallpapersList()
 {
     ui->listWidget_wallpapers->clear();
     wallpapersList.clear();
-    QDirIterator it(wallpapersFolder, QStringList() << "*.mp4", QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator it(wallpapersFolder, QStringList() << "*.mp4" << "*.avi" << "*.flv" << "*.wmv" << "*.mov",
+                    QDir::Files, QDirIterator::Subdirectories);
     int cnt = 0, row = -1;
     while (it.hasNext()) {
         QString next = it.next(), newNext = transformWallpaperFileName(next);
@@ -58,17 +68,18 @@ void MainWindow::initWallpapersList()
         }
         cnt++;
     }
+    if (row == -1) settings->setValue("wallpaperFileName", "");
     ui->listWidget_wallpapers->setCurrentRow(row);
 }
 
 void MainWindow::loadSettings()
 {
     wallpapersFolder = settings->value("wallpapersFolder").toString();
-    wallpaperFileName = settings->value("wallpapersFileName").toString();
+    wallpaperFileName = settings->value("wallpaperFileName").toString();
     qDebug() << wallpapersFolder << wallpaperFileName;
     if (wallpapersFolder == "" || !QDir(wallpapersFolder).exists()) {
         settings->setValue("wallpapersFolder",
-                          QString(QString(getenv("SYSTEMDRIVE")) + QString(getenv("HOMEPATH"))).replace('\\', '/')
+                          QString(strcat(getenv("SYSTEMDRIVE"), getenv("HOMEPATH"))).replace('\\', '/')
                           + "/CORNpaper/Wallpapers");
         settings->sync();
         loadSettings();
@@ -77,7 +88,7 @@ void MainWindow::loadSettings()
         }
     }
     if (!QFile(wallpaperFileName).exists()) {
-        settings->setValue("wallpapersFileName", "");
+        settings->setValue("wallpaperFileName", "");
         wallpaperFileName = "";
     }
 }
@@ -89,8 +100,8 @@ void MainWindow::saveWallpapersFolder()
 
 void MainWindow::saveWallpaper(QString fileName)
 {
-    settings->setValue("wallpapersFileName", fileName);
-    wallpaperFileName = settings->value("wallpapersFileName").toString();
+    settings->setValue("wallpaperFileName", fileName);
+    wallpaperFileName = settings->value("wallpaperFileName").toString();
 }
 
 void MainWindow::onYourButtonClicked() {
@@ -114,15 +125,11 @@ void MainWindow::showDialogSettings()
 
 QString MainWindow::transformWallpaperFileName(QString fileName)
 {
-    QString ans = "";
-    int id = fileName.lastIndexOf("/");
-    for (int i = id + 1; i < fileName.size(); i++) {
-        ans += fileName[i] == '-' ? QChar(' ') : fileName[i];
-    }
+    QString ans = QFileInfo(fileName).fileName().replace('-', ' ');
     return ans.left(ans.lastIndexOf('.'));
 }
 
-void MainWindow::changeWallpapers(QListWidgetItem *item)
+void MainWindow::changeWallpaper(QListWidgetItem *item)
 {
     saveWallpaper(wallpapersList[item->text()]);
     QFile file("weebp/CORNpaper.bat");
@@ -142,6 +149,25 @@ void MainWindow::changeWallpapers(QListWidgetItem *item)
 
     pro->start("cmd.exe /c cd weebp&CORNpaper.bat");
     pro->waitForFinished();
+
+    QFile::link("weebp/CORNpaper.bat", QString(strcat(getenv("SYSTEMDRIVE"), getenv("HOMEPATH"))).replace('\\', '/') +
+                "/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/CORNpaper.lnk");
+}
+
+void MainWindow::closeWallpaper()
+{
+    pro->start("cmd.exe /c taskkill /F /IM mpv.exe");
+    pro->waitForFinished();
+    settings->setValue("wallpaperFileName", "");
+}
+
+void MainWindow::addWallpaper()
+{
+    QString filter = "Videos (*.mp4 *.avi *.flv *.wmv *.mov)";
+    QString fileName = QFileDialog::getOpenFileName(this, "Choose wallpaper",
+                                                    wallpapersFolder.left(3), filter, &filter);
+    QFile::copy(fileName, wallpapersFolder + QFileInfo(fileName).fileName());
+    initWallpapersList();
 }
 
 MainWindow::~MainWindow()

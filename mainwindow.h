@@ -30,8 +30,6 @@ public:
 private:
     void initGui();
 
-    void initWallpapersList();
-
     void loadSettings();
 
     void saveWallpapersFolder();
@@ -41,13 +39,19 @@ private:
     QString transformWallpaperFileName(QString fileName);
 
 private slots:
+    void initWallpapersList();
+
     void onYourButtonClicked();
 
     void onNewButtonClicked();
 
     void showDialogSettings();
 
-    void changeWallpapers(QListWidgetItem *item);
+    void changeWallpaper(QListWidgetItem *item);
+
+    void closeWallpaper();
+
+    void addWallpaper();
 
 private:
     Ui::MainWindow *ui;
