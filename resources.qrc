@@ -11,5 +11,7 @@
         <file>icons/close_hover.png</file>
         <file>icons/add.png</file>
         <file>icons/add_hover.png</file>
+        <file>icons/remove.png</file>
+        <file>icons/remove_hover.png</file>
     </qresource>
 </RCC>

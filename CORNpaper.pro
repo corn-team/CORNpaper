@@ -31,6 +31,7 @@ SOURCES += \
         pushbuttonadd.cpp \
         pushbuttonclose.cpp \
         pushbuttonreload.cpp \
+        pushbuttonremove.cpp \
         pushbuttonsettings.cpp
 
 HEADERS += \
@@ -38,8 +39,8 @@ HEADERS += \
         mainwindow.h \
         pushbuttonadd.h \
         pushbuttonclose.h \
-        pushbuttonclose.h \
         pushbuttonreload.h \
+        pushbuttonremove.h \
         pushbuttonsettings.h
 
 FORMS += \

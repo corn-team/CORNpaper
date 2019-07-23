@@ -51,6 +51,8 @@ private slots:
 
     void closeWallpaper();
 
+    void removeWallpaper();
+
     void addWallpaper();
 
 private:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>323</height>
+    <width>621</width>
+    <height>366</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,6 +99,34 @@
       </item>
       <item>
        <widget class="PushButtonAdd" name="pushButton_add">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="PushButtonRemove" name="pushButton_remove">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -228,7 +256,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>457</width>
+     <width>621</width>
      <height>21</height>
     </rect>
    </property>
@@ -255,6 +283,11 @@
    <class>PushButtonAdd</class>
    <extends>QPushButton</extends>
    <header>pushbuttonadd.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PushButtonRemove</class>
+   <extends>QPushButton</extends>
+   <header>pushbuttonremove.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
