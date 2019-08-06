@@ -80,8 +80,10 @@ void MainWindow::loadSettings()
 {
     wallpapersFolder = settings->value("wallpapersFolder").toString();
     wallpaperFileName = settings->value("wallpaperFileName").toString();
-    qDebug() << wallpapersFolder << wallpaperFileName;
+    panoramic = settings->value("panoramic").toBool();
     if (wallpapersFolder == "" || !QDir(wallpapersFolder).exists()) {
+        settings->setValue("panoramic", false);
+        panoramic = false;
         settings->setValue("wallpapersFolder",
                           QString(strcat(getenv("SYSTEMDRIVE"), getenv("HOMEPATH"))).replace('\\', '/')
                           + "/CORNpaper/Wallpapers/");
@@ -97,9 +99,10 @@ void MainWindow::loadSettings()
     }
 }
 
-void MainWindow::saveWallpapersFolder()
+void MainWindow::saveSettings()
 {
     settings->setValue("wallpapersFolder", wallpapersFolder);
+    settings->setValue("panoramic", panoramic);
 }
 
 void MainWindow::saveWallpaper(QString fileName)
@@ -120,10 +123,11 @@ void MainWindow::onNewButtonClicked() {
 
 void MainWindow::showDialogSettings()
 {
-    dialogSettings = new DialogSettings(this, wallpapersFolder);
+    dialogSettings = new DialogSettings(this, wallpapersFolder, panoramic);
     dialogSettings->exec();
     wallpapersFolder = dialogSettings->wallpapersFolder;
-    saveWallpapersFolder();
+    panoramic = dialogSettings->panoramic;
+    saveSettings();
     initWallpapersList();
 }
 
@@ -139,13 +143,19 @@ void MainWindow::changeWallpaper(QListWidgetItem *item)
     QFile file("weebp/CORNpaper.bat");
     qDebug() << QFileInfo(file).absolutePath();
     file.open(QIODevice::WriteOnly | QFile::Text);
+//    QString batch = "taskkill /F /IM mpv.exe\n"
+//                    "(wp id)>>x.txt\n"
+//                    "set /p var=<x.txt\n"
+//                    "del x.txt\n"
+//                    "wp run mpv --wid=%var% " + wallpaperFileName + " --loop=inf "
+//                    "--player-operation-mode=pseudo-gui "
+//                    "--force-window=yes --no-audio";
     QString batch = "taskkill /F /IM mpv.exe\n"
                     "(wp id)>>x.txt\n"
                     "set /p var=<x.txt\n"
                     "del x.txt\n"
-                    "wp run mpv --wid=%var% " + wallpaperFileName + " --loop=inf "
-                    "--player-operation-mode=pseudo-gui "
-                    "--force-window=yes --no-audio";
+                    "wp run mpv --terminal=no --loop=inf " + wallpaperFileName + "\n"
+                    "wp add --wait " + (panoramic ? "--panoramic" : "--fullscreen") + " --class mpv";
     qDebug() << batch;
     QTextStream out(&file);
     out << batch;

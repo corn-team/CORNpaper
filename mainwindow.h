@@ -32,7 +32,7 @@ private:
 
     void loadSettings();
 
-    void saveWallpapersFolder();
+    void saveSettings();
 
     void saveWallpaper(QString fileName);
 
@@ -64,6 +64,7 @@ private:
     QString settingsFile;
     QSettings *settings;
     QString wallpapersFolder;
+    bool panoramic;
     QString wallpaperFileName;
     QMap<QString, QString> wallpapersList;
 
