@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +33,8 @@ SOURCES += \
         pushbuttonclose.cpp \
         pushbuttonreload.cpp \
         pushbuttonremove.cpp \
-        pushbuttonsettings.cpp
+        pushbuttonsettings.cpp \
+        videoplayer.cpp
 
 HEADERS += \
         dialogsettings.h \
@@ -41,7 +43,8 @@ HEADERS += \
         pushbuttonclose.h \
         pushbuttonreload.h \
         pushbuttonremove.h \
-        pushbuttonsettings.h
+        pushbuttonsettings.h \
+        videoplayer.h
 
 FORMS += \
         dialogsettings.ui \

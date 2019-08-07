@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
     initGui();
 
+    is_player_set = false;
+
     //Setting application font
     int id = QFontDatabase::addApplicationFont(":/fonts/roboto-condensed.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
@@ -31,8 +33,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_settings, SIGNAL(clicked()), this, SLOT(showDialogSettings()));
     connect(ui->actionSettings, SIGNAL(triggered()), this, SLOT(showDialogSettings()));
 
-    connect(ui->listWidget_wallpapers, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(changeWallpaper(QListWidgetItem*)));
+    connect(ui->listWidget_wallpapers, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(changeWallpaper(QListWidgetItem*)));
     connect(ui->actionSet, SIGNAL(triggered()), this, SLOT(changeWallpaper()));
+
+    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(show_preview(QListWidgetItem*)));
 
     connect(ui->pushButton_reload, SIGNAL(clicked()), this, SLOT(initWallpapersList()));
 
@@ -74,6 +79,15 @@ void MainWindow::initGui()
     ui->pushButton_add->setToolTip("Download new wallpaper");
 
     initWallpapersList();
+}
+
+void MainWindow::setPlayer(QUrl &url)
+{
+    player = new VideoPlayer(this);
+    ui->preview_layout->addLayout(player->m_layout);
+    player->setUrl(url);
+    player->show();
+
 }
 
 void MainWindow::initWallpapersList()
@@ -174,13 +188,6 @@ void MainWindow::changeWallpaper(QListWidgetItem *item)
     QFile file("weebp/CORNpaper.bat");
     qDebug() << QFileInfo(file).absolutePath();
     file.open(QIODevice::WriteOnly | QFile::Text);
-//    QString batch = "taskkill /F /IM mpv.exe\n"
-//                    "(wp id)>>x.txt\n"
-//                    "set /p var=<x.txt\n"
-//                    "del x.txt\n"
-//                    "wp run mpv --wid=%var% " + wallpaperFileName + " --loop=inf "
-//                    "--player-operation-mode=pseudo-gui "
-//                    "--force-window=yes --no-audio";
     QString batch = "taskkill /F /IM mpv.exe\n"
                     "(wp id)>>x.txt\n"
                     "set /p var=<x.txt\n"
@@ -238,10 +245,25 @@ void MainWindow::addWallpaper()
     initWallpapersList();
 }
 
+void MainWindow::show_preview(QListWidgetItem* item)
+{
+    QString file = wallpapersList[item->text()];
+    qDebug() << file;
+    QUrl url = QUrl::fromLocalFile("/" + file);
+
+    if (!is_player_set) {
+        setPlayer(url);
+        is_player_set = true;
+        return;
+    }
+
+    player->setUrl(url);
+}
+
 void MainWindow::showAboutMessage()
 {
     QString ref = "https://github.com/corn-team";
-    QString text = "CORNpapper<br>"
+    QString text = "CORNpaper<br>"
                    "alfa-version<br>"
                    "created by CORNteam<br>"
                    "e-mail: linux.corn.os.team@gmail.com<br>"
@@ -253,7 +275,7 @@ void MainWindow::showHelpMessage()
 {
     QMessageBox::information(this, "Help", "+ to download new wallpaper<br>"
                                            "- to remove selected wallpaper<br>"
-                                           "X to close wallpaper<br>", QMessageBox::Ok);
+                                           "X to close wallpaper", QMessageBox::Ok);
 }
 
 MainWindow::~MainWindow()

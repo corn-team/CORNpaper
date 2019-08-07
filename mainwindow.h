@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "dialogsettings.h"
+#include "videoplayer.h"
 
 #include <QMainWindow>
 
@@ -30,6 +31,8 @@ public:
 private:
     void initGui();
 
+    void setPlayer(QUrl &url);
+
     void loadSettings();
 
     void saveSettings();
@@ -57,6 +60,8 @@ private slots:
 
     void addWallpaper();
 
+    void show_preview(QListWidgetItem* item);
+
     void showAboutMessage();
 
     void showHelpMessage();
@@ -65,6 +70,9 @@ private:
 
     QString wpId;
     QProcess *pro;
+    VideoPlayer *player;
+
+    bool is_player_set;
 
     QString settingsFile;
     QSettings *settings;

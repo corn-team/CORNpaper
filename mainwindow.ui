@@ -243,11 +243,21 @@
      </layout>
     </item>
     <item>
-     <widget class="QListWidget" name="listWidget_wallpapers">
-      <property name="frameShape">
-       <enum>QFrame::Box</enum>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="main_layout">
+      <item>
+       <widget class="QListWidget" name="listWidget_wallpapers">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="preview_layout"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>

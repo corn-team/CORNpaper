@@ -13,5 +13,7 @@
         <file>icons/add_hover.png</file>
         <file>icons/remove.png</file>
         <file>icons/remove_hover.png</file>
+        <file>icons/corn.png</file>
+        <file>icons/corn1.png</file>
     </qresource>
 </RCC>
