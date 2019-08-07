@@ -1,10 +1,11 @@
 #include "dialogsettings.h"
 #include "ui_dialogsettings.h"
 
-DialogSettings::DialogSettings(QWidget *parent, QString wallpapersFolder) :
+DialogSettings::DialogSettings(QWidget *parent, QString wallpapersFolder, bool panoramic) :
     QDialog(parent),
     ui(new Ui::DialogSettings),
-    wallpapersFolder(wallpapersFolder)
+    wallpapersFolder(wallpapersFolder),
+    panoramic(panoramic)
 {
     ui->setupUi(this);
 
@@ -27,6 +28,7 @@ void DialogSettings::initGui()
     ui->pushButton_chooseFolder->installEventFilter(this);
 
     ui->lineEdit_folder->setText(wallpapersFolder);
+    ui->checkBox_panoramic->setChecked(panoramic);
 }
 
 bool DialogSettings::eventFilter(QObject *obj, QEvent *e)
@@ -80,6 +82,7 @@ void DialogSettings::apply()
     } else {
         wallpapersFolder = ui->lineEdit_folder->text();
     }
+    panoramic = !!ui->checkBox_panoramic->isChecked();
     QDialog::close();
 }
 
