@@ -80,7 +80,7 @@ void MainWindow::initWallpapersList()
 {
     ui->listWidget_wallpapers->clear();
     wallpapersList.clear();
-    QDirIterator it(wallpapersFolder, QStringList() << "*.mp4" << "*.avi" << "*.flv" << "*.wmv" << "*.mov",
+    QDirIterator it(wallpapersFolder, QStringList() << "*.mp4" << "*.avi" << "*.flv" << "*.wmv" << "*.mov" << "*.mkv",
                     QDir::Files, QDirIterator::Subdirectories);
     int cnt = 0, row = -1;
     while (it.hasNext()) {
@@ -185,7 +185,7 @@ void MainWindow::changeWallpaper(QListWidgetItem *item)
                     "(wp id)>>x.txt\n"
                     "set /p var=<x.txt\n"
                     "del x.txt\n"
-                    "wp run mpv --terminal=no --loop=inf " + wallpaperFileName + "\n"
+                    "wp run mpv --terminal=no --loop=inf " + wallpaperFileName + " --no-audio\n"
                     "wp add --wait " + (panoramic ? "--panoramic" : "--fullscreen") + " --class mpv";
     qDebug() << batch;
     QTextStream out(&file);
@@ -228,11 +228,12 @@ void MainWindow::removeWallpaper()
 
 void MainWindow::addWallpaper()
 {
-    QString filter = "Videos (*.mp4 *.avi *.flv *.wmv *.mov)";
-    QString fileName = QFileDialog::getOpenFileName(this, "Choose wallpaper",
+    QString filter = "Videos (*.mp4 *.avi *.flv *.wmv *.mov *.mkv)";
+    QStringList fileNames = QFileDialog::getOpenFileNames(this, "Choose wallpaper",
                                                     wallpapersFolder.left(3), filter, &filter);
 
-    QFile::copy(fileName, QString(wallpapersFolder + "/" + QFileInfo(fileName).fileName()).replace("//", "/"));
+    for (auto fileName : fileNames)
+      QFile::copy(fileName, QString(wallpapersFolder + "/" + QFileInfo(fileName).fileName()).replace("//", "/"));
 
     initWallpapersList();
 }
@@ -250,7 +251,9 @@ void MainWindow::showAboutMessage()
 
 void MainWindow::showHelpMessage()
 {
-    QMessageBox::information(this, "Help", "Soon", QMessageBox::Ok);
+    QMessageBox::information(this, "Help", "+ to download new wallpaper<br>"
+                                           "- to remove selected wallpaper<br>"
+                                           "X to close wallpaper<br>", QMessageBox::Ok);
 }
 
 MainWindow::~MainWindow()
