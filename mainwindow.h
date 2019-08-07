@@ -49,12 +49,17 @@ private slots:
 
     void changeWallpaper(QListWidgetItem *item);
 
+    void changeWallpaper();
+
     void closeWallpaper();
 
     void removeWallpaper();
 
     void addWallpaper();
 
+    void showAboutMessage();
+
+    void showHelpMessage();
 private:
     Ui::MainWindow *ui;
 

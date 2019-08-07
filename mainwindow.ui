@@ -260,7 +260,69 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menufile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionAdd"/>
+    <addaction name="actionRemove"/>
+    <addaction name="actionSet"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+    <addaction name="actionHelp"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menufile"/>
   </widget>
+  <action name="actionAdd">
+   <property name="text">
+    <string>Add to list</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="text">
+    <string>Remove from list</string>
+   </property>
+  </action>
+  <action name="actionSet">
+   <property name="text">
+    <string>Set wallpaper</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close wallpaper</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

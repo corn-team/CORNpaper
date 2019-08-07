@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("CORNpaper");
 
     pro = new QProcess(this);
 
@@ -26,12 +27,26 @@ MainWindow::MainWindow(QWidget *parent) :
     //Connecting SIGNALs and SLOTs
     connect(ui->pushButton_your, SIGNAL(clicked()), this, SLOT(onYourButtonClicked()));
     connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(onNewButtonClicked()));
+
     connect(ui->pushButton_settings, SIGNAL(clicked()), this, SLOT(showDialogSettings()));
-    connect(ui->listWidget_wallpapers, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(changeWallpaper(QListWidgetItem*)));
+    connect(ui->actionSettings, SIGNAL(triggered()), this, SLOT(showDialogSettings()));
+
+    connect(ui->listWidget_wallpapers, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(changeWallpaper(QListWidgetItem*)));
+    connect(ui->actionSet, SIGNAL(triggered()), this, SLOT(changeWallpaper()));
+
     connect(ui->pushButton_reload, SIGNAL(clicked()), this, SLOT(initWallpapersList()));
+
     connect(ui->pushButton_close, SIGNAL(clicked()), this, SLOT(closeWallpaper()));
+    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(closeWallpaper()));
+
     connect(ui->pushButton_add, SIGNAL(clicked()), this, SLOT(addWallpaper()));
+    connect(ui->actionAdd, SIGNAL(triggered()), this, SLOT(addWallpaper()));
+
     connect(ui->pushButton_remove, SIGNAL(clicked()), this, SLOT(removeWallpaper()));
+    connect(ui->actionRemove, SIGNAL(triggered()), this, SLOT(removeWallpaper()));
+
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(showAboutMessage()));
+    connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(showHelpMessage()));
 }
 
 void MainWindow::initGui()
@@ -40,18 +55,23 @@ void MainWindow::initGui()
 
     ui->pushButton_settings->setIcon(QIcon(":/icons/settings.png"));
     ui->pushButton_settings->setIconSize(QSize(30, 30));
+    ui->pushButton_settings->setToolTip("Settings");
 
     ui->pushButton_reload->setIcon(QIcon(":/icons/reload.png"));
     ui->pushButton_reload->setIconSize(QSize(28, 28));
+    ui->pushButton_reload->setToolTip("Reload your wallpaper list");
 
     ui->pushButton_close->setIcon(QIcon(":/icons/close.png"));
     ui->pushButton_close->setIconSize(QSize(26, 26));
+    ui->pushButton_close->setToolTip("Close current wallpaper");
 
     ui->pushButton_remove->setIcon(QIcon(":/icons/remove.png"));
     ui->pushButton_remove->setIconSize(QSize(30, 30));
+    ui->pushButton_remove->setToolTip("Remove selected wallpaper from your wllpaper list");
 
     ui->pushButton_add->setIcon(QIcon(":/icons/add.png"));
     ui->pushButton_add->setIconSize(QSize(30, 30));
+    ui->pushButton_add->setToolTip("Download new wallpaper");
 
     initWallpapersList();
 }
@@ -137,6 +157,17 @@ QString MainWindow::transformWallpaperFileName(QString fileName)
     return ans.left(ans.lastIndexOf('.'));
 }
 
+void MainWindow::changeWallpaper()
+{
+    int current_row = ui->listWidget_wallpapers->currentRow();
+    if (current_row < 0) {
+        QMessageBox::warning(this, "Warning", "No wallpaper selected");
+        return;
+    }
+    QListWidgetItem *item = ui->listWidget_wallpapers->item(current_row);
+    changeWallpaper(item);
+}
+
 void MainWindow::changeWallpaper(QListWidgetItem *item)
 {
     saveWallpaper(wallpapersList[item->text()]);
@@ -204,6 +235,22 @@ void MainWindow::addWallpaper()
     QFile::copy(fileName, QString(wallpapersFolder + "/" + QFileInfo(fileName).fileName()).replace("//", "/"));
 
     initWallpapersList();
+}
+
+void MainWindow::showAboutMessage()
+{
+    QString ref = "https://github.com/corn-team";
+    QString text = "CORNpapper<br>"
+                   "alfa-version<br>"
+                   "created by CORNteam<br>"
+                   "e-mail: linux.corn.os.team@gmail.com<br>"
+                   "more projects on github: <a href=" + ref + ">corn-team</a>";
+    QMessageBox::about(this, "About", text);
+}
+
+void MainWindow::showHelpMessage()
+{
+    QMessageBox::information(this, "Help", "Soon", QMessageBox::Ok);
 }
 
 MainWindow::~MainWindow()
